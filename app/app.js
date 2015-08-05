@@ -4,16 +4,29 @@ import UI from "pui-react-lists";
 var AddActionItem = React.createClass({
   handleSubmit(e) {
     e.preventDefault();
-    var textInput = React.findDOMNode(this.refs.text);
-    var text = textInput.value.trim();
-    textInput.value = '';
 
-    this.props.onNewItem(text);
+    function getInput(ref) {
+      var input = React.findDOMNode(ref);
+      var result = input.value.trim();
+      input.value = '';
+
+      return result;
+    }
+
+    var item = {
+      owner: getInput(this.refs.owner),
+      action: getInput(this.refs.action)
+    };
+
+    this.props.onNewItem(item);
   },
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
-        <input type="text" ref="text" className="txt-c"/>
+        <input type="text" ref="owner" className="txt-r"/>
+        needs to
+        <input type="text" ref="action" className="txt-l"/>
+        <button type="submit">Submit</button>
       </form>
     )
   }
@@ -29,16 +42,13 @@ var ActionItems = React.createClass({
     var newItems = this.state.items;
     newItems.push(item);
 
-    console.log(`ok ${newItems}`);
-
-
     this.setState({
       items: newItems
     });
   },
   render() {
     var items = this.state.items.map((item) => {
-      return <UI.ListItem>{item}</UI.ListItem>
+      return <UI.ListItem>{item.owner} needs to {item.action}</UI.ListItem>
     });
     return (
       <div className="actionItems txt-c">
